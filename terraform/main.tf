@@ -17,10 +17,12 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
   is_hns_enabled           = false
-  static_website {
-    index_document = "index.html"
-    error_404_document = "404.html"
-  }
+}
+
+resource "azurerm_storage_account_static_website" "static_site" {
+  storage_account_id = azurerm_storage_account.storage.id
+  index_document     = "index.html"
+  error_404_document = "404.html"
 }
 
 resource "azurerm_storage_blob" "index" {
@@ -29,4 +31,5 @@ resource "azurerm_storage_blob" "index" {
   storage_container_name = "$web"
   type                   = "Block"
   source_content         = "<html><body><h1>Hello from MACH Composer POC!</h1></body></html>"
+  content_type           = "text/html"
 }
